@@ -1,5 +1,8 @@
 package analise_de_credito;
 
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
+
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -9,33 +12,40 @@ import java.util.stream.Stream;
 
 public class Main {
 
+	private static final String NOME_ARQUIVO = "banco.txt";
+	private static final String USER_DIR = "user.dir";
+
 	public static void main(String[] args) {
 		carregaDataBase();
 	}
 
 	private static void carregaDataBase() {
-		List<Perfil> perfis = new ArrayList<Perfil>();
-		
 		Stream<String> linhas = leArquivo();
 		
-		linhas.map(linha -> {
-	        return perfis.add(new Perfil(linha));
+		Stream<Perfil> perfis = linhas.map(linha -> {
+	        return new Perfil(linha);
 		});
-		//validar se preenchou perfis
 		
-		DataBase.getInstance().setPerfis(perfis.stream());
+		DataBase.getInstance().setPerfis(perfis);
 	}
 
 	private static Stream<String> leArquivo() {
 		try {
-			return Files.lines(getCaminhoArquivo());
+			return Files.lines(getPathArquivo(), ISO_8859_1);
 		} catch (Exception e) {
 			throw new RuntimeException("Erro ao carregar o database");
 		}
 	}
 
-	private static Path getCaminhoArquivo() {
-		Path path = Paths.get(System.getProperty("user.dir"));
-		return path;
+	private static Path getPathArquivo() {
+		return Paths.get(getCaminhoArquivoAbsoluto());
+	}
+
+	private static String getCaminhoArquivoAbsoluto() {
+		return getDiretorioProjeto().concat("\\").concat(NOME_ARQUIVO);
+	}
+
+	private static String getDiretorioProjeto() {
+		return System.getProperty(USER_DIR);
 	}
 }
