@@ -1,14 +1,14 @@
-package analise_de_credito;
+package analise.credito;
 
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
 
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Stream;
+
+import analise.credito.base.DataBase;
+import analise.credito.perfil.Perfil;
 
 public class Main {
 

@@ -1,6 +1,8 @@
-package analise_de_credito;
+package analise.credito.base;
 
 import java.util.stream.Stream;
+
+import analise.credito.perfil.Perfil;
 
 public class DataBase {
 
