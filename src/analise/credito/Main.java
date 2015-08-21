@@ -1,6 +1,6 @@
 package analise.credito;
 
-import analise.credito.calculadora.CalculadoraPrestacoes;
+import analise.credito.view.PerfilCadastro;
 
 
 public class Main {
@@ -9,6 +9,7 @@ public class Main {
 	private static final String USER_DIR = "user.dir";
 
 	public static void main(String[] args) {
+		new PerfilCadastro().show(args);
 	}
 
 //	private static void carregaDataBase() {

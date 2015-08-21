@@ -10,9 +10,8 @@ import analise.credito.perfil.regras.IdadeContaCorrente;
 import analise.credito.perfil.regras.Moradia;
 import analise.credito.perfil.regras.SPC;
 
-
 public class Perfil {
-	
+
 	private Double valorRequisitado;
 	private Double renda;
 	private FuncionarioBanco funcionarioBanco;
@@ -24,5 +23,52 @@ public class Perfil {
 	private Dependentes dependentes;
 	private Emprego emprego;
 	private SPC spc;
+	
+	public Perfil() {
+	}
+
+	public Double getValorRequisitado() {
+		return valorRequisitado;
+	}
+
+	public Double getRenda() {
+		return renda;
+	}
+
+	public FuncionarioBanco getFuncionarioBanco() {
+		return funcionarioBanco;
+	}
+
+	public ComprovacaoDeRenda getComprovacaoDeRenda() {
+		return comprovacaoDeRenda;
+	}
+
+	public IdadeContaCorrente getIdadeContaCorrente() {
+		return idadeContaCorrente;
+	}
+
+	public EstadoCivil getEstadoCivil() {
+		return estadoCivil;
+	}
+
+	public Moradia getMoradia() {
+		return moradia;
+	}
+
+	public GrauEscolaridade getGrauEscolaridade() {
+		return grauEscolaridade;
+	}
+
+	public Dependentes getDependentes() {
+		return dependentes;
+	}
+
+	public Emprego getEmprego() {
+		return emprego;
+	}
+
+	public SPC getSpc() {
+		return spc;
+	}
 	
 }
