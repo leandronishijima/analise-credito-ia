@@ -1,5 +1,7 @@
 package analise.credito;
 
+import analise.credito.calculadora.CalculadoraPrestacoes;
+
 
 public class Main {
 
