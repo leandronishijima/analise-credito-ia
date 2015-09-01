@@ -1,6 +1,5 @@
 package analise.credito.view;
 
-import static javafx.geometry.Pos.BASELINE_RIGHT;
 import static javafx.geometry.Pos.CENTER;
 import static javafx.geometry.Pos.TOP_LEFT;
 import javafx.application.Application;
@@ -34,6 +33,7 @@ public class PerfilCadastro extends Application {
 	private AnchorPane pane;
 	
 	private VBox vLayout;
+	private VBox formulario;
 	private HBox hLayoutHeader;
 	private HBox hLayoutFooter;
 	private GridPane gridCampos;
@@ -68,15 +68,19 @@ public class PerfilCadastro extends Application {
 	private void inicializaComponentes() {
 		lblTitle = new Label("Perfil");
 		
-		adicionaFormRegras();
-		
-		btnAnalisar = new Button("Analisar Perfil");
-		hLayoutFooter.getChildren().add(btnAnalisar);
+		criaFormulario();
 		
 		addHLayout(lblTitle);
 		addVLayout(hLayoutHeader);
-		addVLayout(gridCampos);
-		addVLayout(hLayoutFooter);
+		addVLayout(formulario);
+	}
+
+	private void criaFormulario() {
+		adicionaFormRegras();
+		
+		formulario.getChildren().add(gridCampos);
+		btnAnalisar = new Button("Analisar Perfil");
+		formulario.getChildren().add(btnAnalisar);
 	}
 	
 	private void adicionaFormRegras() {
@@ -171,6 +175,10 @@ public class PerfilCadastro extends Application {
 		hLayoutHeader = new HBox();
 		hLayoutHeader.setSpacing(5);
 		hLayoutHeader.setAlignment(TOP_LEFT);
+		
+		formulario = new VBox();
+		formulario.setSpacing(5);
+		formulario.setAlignment(TOP_LEFT);
 		
 		gridCampos = new GridPane();
 		gridCampos.setAlignment(Pos.CENTER);
