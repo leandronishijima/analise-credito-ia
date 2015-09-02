@@ -3,6 +3,7 @@ package analise.credito.view;
 import static javafx.geometry.Pos.TOP_LEFT;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
@@ -16,8 +17,11 @@ import analise.credito.perfil.regras.GrauEscolaridade;
 import analise.credito.perfil.regras.IdadeContaCorrente;
 import analise.credito.perfil.regras.Moradia;
 import analise.credito.perfil.regras.SPC;
+import analise.credito.view.components.CurrencyTextField;
 
 public class FormularioView extends VBox {
+	
+	private CurrencyTextField txtValorEmprestimo;
 	
 	private ComboBox<ComprovacaoDeRenda> cbComprovacaoRenda;
 	private ComboBox<Dependentes> cbDependentes;
@@ -35,6 +39,8 @@ public class FormularioView extends VBox {
 		setSpacing(5);
 		setAlignment(TOP_LEFT);
 		
+		configuraComponenteValorEmprestimo();
+		
 		gridCampos = new GridPane();
 		gridCampos.setAlignment(Pos.CENTER);
 		gridCampos.setHgap(10);
@@ -43,8 +49,13 @@ public class FormularioView extends VBox {
 		
 		criaFormulario();
 	}
+
+	private void configuraComponenteValorEmprestimo() {
+		txtValorEmprestimo = new CurrencyTextField();
+	}
 	
 	private void criaFormulario() {
+		addGrid("Valor do empréstimo", txtValorEmprestimo, 0);
 		adicionaFormRegras();
 		
 		getChildren().add(gridCampos);
@@ -62,9 +73,9 @@ public class FormularioView extends VBox {
 		adicionaCampoSPC(9);
 	}
 	
-	private void addGrid(String label, @SuppressWarnings("rawtypes") ComboBox cb, int ordem) {
+	private void addGrid(String label, Node component, int ordem) {
 		gridCampos.add(toLabel(label), 0, ordem);
-		gridCampos.add(cb, 1, ordem);
+		gridCampos.add(component, 1, ordem);
 	}
 	
 	private void adicionaCampoSPC(int ordem) {

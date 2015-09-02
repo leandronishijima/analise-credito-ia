@@ -2,7 +2,6 @@ package analise.credito.view;
 
 import static javafx.collections.FXCollections.observableArrayList;
 import static javafx.geometry.Pos.TOP_LEFT;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.PieChart;
 import javafx.scene.layout.VBox;
@@ -22,11 +21,11 @@ public class ResultadosView extends VBox {
 	private void geraGrafico() {
 		ObservableList<PieChart.Data> pieChartData =
                 observableArrayList(
-                new PieChart.Data("Grapefruit", 13),
-                new PieChart.Data("Oranges", 25),
-                new PieChart.Data("Plums", 10),
-                new PieChart.Data("Pears", 22),
-                new PieChart.Data("Apples", 30));
+                new PieChart.Data("Dependentes", 13),
+                new PieChart.Data("Emprego", 25),
+                new PieChart.Data("Estado civil", 10),
+                new PieChart.Data("Moradia", 22),
+                new PieChart.Data("Grau de escolaridade", 30));
 		
 		final PieChart chart = new PieChart(pieChartData);
         chart.setTitle("Análise de crédito");
