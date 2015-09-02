@@ -1,21 +1,12 @@
 package analise.credito.view;
 
-import static javafx.geometry.Pos.CENTER;
 import static javafx.geometry.Pos.TOP_LEFT;
-import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-import analise.credito.perfil.Perfil;
 import analise.credito.perfil.regras.ComprovacaoDeRenda;
 import analise.credito.perfil.regras.Dependentes;
 import analise.credito.perfil.regras.Emprego;
@@ -26,19 +17,7 @@ import analise.credito.perfil.regras.IdadeContaCorrente;
 import analise.credito.perfil.regras.Moradia;
 import analise.credito.perfil.regras.SPC;
 
-public class PerfilCadastro extends Application {
-	
-	private Perfil perfil;
-	
-	private AnchorPane pane;
-	
-	private VBox vLayout;
-	private VBox formulario;
-	private HBox hLayoutHeader;
-	private HBox hLayoutFooter;
-	private GridPane gridCampos;
-	
-	private Label lblTitle;
+public class FormularioView extends VBox {
 	
 	private ComboBox<ComprovacaoDeRenda> cbComprovacaoRenda;
 	private ComboBox<Dependentes> cbDependentes;
@@ -50,37 +29,25 @@ public class PerfilCadastro extends Application {
 	private ComboBox<Moradia> cbMoradia;
 	private ComboBox<SPC> cbSPC;
 	
-	private Button btnAnalisar;
+	private GridPane gridCampos;
 	
-	public PerfilCadastro() {
-		perfil = new Perfil();
-	}
-
-	@Override
-	public void start(Stage stage) throws Exception {
-		inicializaLayouts();
-		inicializaComponentes();
-		inicializaConfiguracoesPane();
+	public FormularioView() {
+		setSpacing(5);
+		setAlignment(TOP_LEFT);
 		
-		configuraStage(stage);
-	}
-	
-	private void inicializaComponentes() {
-		lblTitle = new Label("Perfil");
+		gridCampos = new GridPane();
+		gridCampos.setAlignment(Pos.CENTER);
+		gridCampos.setHgap(10);
+		gridCampos.setVgap(10);
+		gridCampos.setPadding(new Insets(25, 25, 25, 25));
 		
 		criaFormulario();
-		
-		addHLayout(lblTitle);
-		addVLayout(hLayoutHeader);
-		addVLayout(formulario);
 	}
-
+	
 	private void criaFormulario() {
 		adicionaFormRegras();
 		
-		formulario.getChildren().add(gridCampos);
-		btnAnalisar = new Button("Analisar Perfil");
-		formulario.getChildren().add(btnAnalisar);
+		getChildren().add(gridCampos);
 	}
 	
 	private void adicionaFormRegras() {
@@ -94,7 +61,12 @@ public class PerfilCadastro extends Application {
 		adicionaCampoMoradia(8);
 		adicionaCampoSPC(9);
 	}
-
+	
+	private void addGrid(String label, @SuppressWarnings("rawtypes") ComboBox cb, int ordem) {
+		gridCampos.add(toLabel(label), 0, ordem);
+		gridCampos.add(cb, 1, ordem);
+	}
+	
 	private void adicionaCampoSPC(int ordem) {
 		cbSPC = new ComboBox<SPC>();
 		cbSPC.getItems().addAll(SPC.values());
@@ -158,63 +130,8 @@ public class PerfilCadastro extends Application {
 		addGrid("Comprovação de renda", cbComprovacaoRenda, ordem);
 	}
 	
-	private void addGrid(String label, @SuppressWarnings("rawtypes") ComboBox cb, int ordem) {
-		gridCampos.add(toLabel(label), 0, ordem);
-		gridCampos.add(cb, 1, ordem);
-	}
-
 	private Label toLabel(String text) {
 		return new Label(text);
 	}
 	
-	private void inicializaLayouts() {
-		vLayout = new VBox();
-		vLayout.setSpacing(5);
-		vLayout.setAlignment(TOP_LEFT);
-		
-		hLayoutHeader = new HBox();
-		hLayoutHeader.setSpacing(5);
-		hLayoutHeader.setAlignment(TOP_LEFT);
-		
-		formulario = new VBox();
-		formulario.setSpacing(5);
-		formulario.setAlignment(TOP_LEFT);
-		
-		gridCampos = new GridPane();
-		gridCampos.setAlignment(Pos.CENTER);
-		gridCampos.setHgap(10);
-		gridCampos.setVgap(10);
-		gridCampos.setPadding(new Insets(25, 25, 25, 25));
-		
-		hLayoutFooter = new HBox();
-		hLayoutFooter.setSpacing(5);
-		hLayoutFooter.setAlignment(CENTER);
-	}
-	
-	private void addVLayout(Node node) {
-		vLayout.getChildren().add(node);
-	}
-	
-	private void addHLayout(Node node) {
-		hLayoutHeader.getChildren().add(node);
-	}
-
-	private void configuraStage(Stage stage) {
-		Scene scene = new Scene(pane);
-		stage.setScene(scene);
-		stage.setTitle("Análise de crédito");
-		stage.setResizable(true);
-		stage.show();
-	}
-	
-	private void inicializaConfiguracoesPane() {
-		pane = new AnchorPane();
-		pane.setPrefSize(800, 620);
-		pane.getChildren().addAll(vLayout);
-	}
-	
-	public void show(String[] args) {
-		launch(args);
-	}
-
 }

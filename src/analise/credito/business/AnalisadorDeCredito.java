@@ -1,4 +1,4 @@
-package analise.credito.utils;
+package analise.credito.business;
 
 import analise.credito.perfil.Perfil;
 
