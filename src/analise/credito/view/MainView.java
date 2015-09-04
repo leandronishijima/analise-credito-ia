@@ -12,11 +12,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import analise.credito.perfil.Perfil;
 
 public class MainView extends Application {
-	
-	private Perfil perfil;
 	
 	private AnchorPane pane;
 	
@@ -32,7 +29,6 @@ public class MainView extends Application {
 	private Label lblTitle;
 	
 	public MainView() {
-		perfil = new Perfil();
 	}
 
 	@Override
@@ -45,7 +41,7 @@ public class MainView extends Application {
 	}
 	
 	private void mostraResultado() {
-		resultado = new ResultadosView(perfil);
+		resultado = new ResultadosView(formulario.getPerfil());
 		hLayoutBody.getChildren().clear();
 		hLayoutBody.getChildren().add(resultado);
 	}

@@ -1,6 +1,6 @@
 package analise.credito.perfil.regras;
 
-public enum FuncionarioBanco {
+public enum FuncionarioBanco implements Regra {
 	
 	SIM(100),
 	NAO(0);
@@ -11,6 +11,7 @@ public enum FuncionarioBanco {
 		this.pontuacao = pontuacao;
 	}
 	
+	@Override
 	public int getPontuacao() {
 		return pontuacao;
 	}

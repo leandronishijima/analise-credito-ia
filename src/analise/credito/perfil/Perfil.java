@@ -1,5 +1,9 @@
 package analise.credito.perfil;
 
+import static javafx.collections.FXCollections.observableArrayList;
+import javafx.collections.ObservableList;
+import javafx.scene.chart.PieChart;
+import javafx.scene.chart.PieChart.Data;
 import analise.credito.perfil.regras.ComprovacaoDeRenda;
 import analise.credito.perfil.regras.Dependentes;
 import analise.credito.perfil.regras.Emprego;
@@ -12,17 +16,17 @@ import analise.credito.perfil.regras.SPC;
 
 public class Perfil {
 
-	private Double valorRequisitado;
-	private Double renda;
-	private FuncionarioBanco funcionarioBanco;
-	private ComprovacaoDeRenda comprovacaoDeRenda;
-	private IdadeContaCorrente idadeContaCorrente;
-	private EstadoCivil estadoCivil;
-	private Moradia moradia;
-	private GrauEscolaridade grauEscolaridade;
-	private Dependentes dependentes;
-	private Emprego emprego;
-	private SPC spc;
+	protected Double valorRequisitado;
+	protected Double renda;
+	protected FuncionarioBanco funcionarioBanco;
+	protected ComprovacaoDeRenda comprovacaoDeRenda;
+	protected IdadeContaCorrente idadeContaCorrente;
+	protected EstadoCivil estadoCivil;
+	protected Moradia moradia;
+	protected GrauEscolaridade grauEscolaridade;
+	protected Dependentes dependentes;
+	protected Emprego emprego;
+	protected SPC spc;
 	
 	public Perfil() {
 	}
@@ -69,6 +73,23 @@ public class Perfil {
 
 	public SPC getSpc() {
 		return spc;
+	}
+	
+	public ObservableList<PieChart.Data> getPieChartData() {
+		return observableArrayList(
+				makePieChartData(funcionarioBanco.toString(), funcionarioBanco.getPontuacao()),
+				makePieChartData(comprovacaoDeRenda.toString(), comprovacaoDeRenda.getPontuacao()),
+				makePieChartData(idadeContaCorrente.toString(), idadeContaCorrente.getPontuacao()),
+				makePieChartData(estadoCivil.toString(), estadoCivil.getPontuacao()),
+				makePieChartData(moradia.toString(), moradia.getPontuacao()),
+				makePieChartData(grauEscolaridade.toString(), grauEscolaridade.getPontuacao()),
+				makePieChartData(dependentes.toString(), dependentes.getPontuacao()),
+				makePieChartData(emprego.toString(), emprego.getPontuacao()),
+				makePieChartData(spc.toString(), spc.getPontuacao()));
+	}
+
+	private Data makePieChartData(String label, int pontuacao) {
+		return new PieChart.Data(label, pontuacao);
 	}
 	
 }
