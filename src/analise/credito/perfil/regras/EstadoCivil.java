@@ -24,4 +24,9 @@ public enum EstadoCivil implements Regra {
 	public String toString() {
 		return label;
 	}
+
+	@Override
+	public String getLabel() {
+		return "Estado civil";
+	}
 }

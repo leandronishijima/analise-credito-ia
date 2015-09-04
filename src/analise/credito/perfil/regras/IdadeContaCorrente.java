@@ -25,4 +25,9 @@ public enum IdadeContaCorrente implements Regra {
 		return label;
 	}
 
+	@Override
+	public String getLabel() {
+		return "Grau de escolaridade";
+	}
+
 }

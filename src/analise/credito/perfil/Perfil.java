@@ -77,15 +77,15 @@ public class Perfil {
 	
 	public ObservableList<PieChart.Data> getPieChartData() {
 		return observableArrayList(
-				makePieChartData(funcionarioBanco.toString(), funcionarioBanco.getPontuacao()),
-				makePieChartData(comprovacaoDeRenda.toString(), comprovacaoDeRenda.getPontuacao()),
-				makePieChartData(idadeContaCorrente.toString(), idadeContaCorrente.getPontuacao()),
-				makePieChartData(estadoCivil.toString(), estadoCivil.getPontuacao()),
-				makePieChartData(moradia.toString(), moradia.getPontuacao()),
-				makePieChartData(grauEscolaridade.toString(), grauEscolaridade.getPontuacao()),
-				makePieChartData(dependentes.toString(), dependentes.getPontuacao()),
-				makePieChartData(emprego.toString(), emprego.getPontuacao()),
-				makePieChartData(spc.toString(), spc.getPontuacao()));
+				makePieChartData(funcionarioBanco.getLabel(), funcionarioBanco.getPontuacao()),
+				makePieChartData(comprovacaoDeRenda.getLabel(), comprovacaoDeRenda.getPontuacao()),
+				makePieChartData(idadeContaCorrente.getLabel(), idadeContaCorrente.getPontuacao()),
+				makePieChartData(estadoCivil.getLabel(), estadoCivil.getPontuacao()),
+				makePieChartData(moradia.getLabel(), moradia.getPontuacao()),
+				makePieChartData(grauEscolaridade.getLabel(), grauEscolaridade.getPontuacao()),
+				makePieChartData(dependentes.getLabel(), dependentes.getPontuacao()),
+				makePieChartData(emprego.getLabel(), emprego.getPontuacao()),
+				makePieChartData(spc.getLabel(), spc.getPontuacao()));
 	}
 
 	private Data makePieChartData(String label, int pontuacao) {

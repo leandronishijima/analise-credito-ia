@@ -1,11 +1,16 @@
 package analise.credito.view;
 
+import static java.lang.Integer.MAX_VALUE;
 import static javafx.geometry.Pos.TOP_LEFT;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Spinner;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import analise.credito.perfil.Perfil;
@@ -23,7 +28,12 @@ import analise.credito.view.components.CurrencyTextField;
 
 public class FormularioView extends VBox {
 
+	private GridPane gridFormularioValoresEmprestimo;
 	private CurrencyTextField txtValorEmprestimo;
+	private CurrencyTextField txtRenda;
+	private Spinner<Integer> spQtdParcelas;
+	
+	private Button btnProximo;
 
 	private ComboBox<ComprovacaoDeRenda> cbComprovacaoRenda;
 	private ComboBox<Dependentes> cbDependentes;
@@ -34,22 +44,30 @@ public class FormularioView extends VBox {
 	private ComboBox<IdadeContaCorrente> cbIdadeContaCorrente;
 	private ComboBox<Moradia> cbMoradia;
 	private ComboBox<SPC> cbSPC;
+	
+	private Button btnVoltar;
 
-	private GridPane gridCampos;
+	private GridPane gridFormularioRegras;
 
 	public FormularioView() {
 		setSpacing(5);
 		setAlignment(TOP_LEFT);
 
-		configuraComponenteValorEmprestimo();
+		configuraTextField();
 
-		gridCampos = new GridPane();
-		gridCampos.setAlignment(Pos.CENTER);
-		gridCampos.setHgap(10);
-		gridCampos.setVgap(10);
-		gridCampos.setPadding(new Insets(25, 25, 25, 25));
+		gridFormularioValoresEmprestimo = new GridPane();
+		gridFormularioValoresEmprestimo.setAlignment(Pos.CENTER);
+		gridFormularioValoresEmprestimo.setHgap(10);
+		gridFormularioValoresEmprestimo.setVgap(10);
+		gridFormularioValoresEmprestimo.setPadding(new Insets(25, 25, 25, 25));
+		
+		gridFormularioRegras = new GridPane();
+		gridFormularioRegras.setAlignment(Pos.CENTER);
+		gridFormularioRegras.setHgap(10);
+		gridFormularioRegras.setVgap(10);
+		gridFormularioRegras.setPadding(new Insets(25, 25, 25, 25));
 
-		criaFormulario();
+		criaFormularios();
 	}
 
 	public Perfil getPerfil() {
@@ -66,95 +84,123 @@ public class FormularioView extends VBox {
 				.build();
 	}
 
-	private void configuraComponenteValorEmprestimo() {
+	private void configuraTextField() {
 		txtValorEmprestimo = new CurrencyTextField();
+		txtRenda = new CurrencyTextField();
+		spQtdParcelas = new Spinner<Integer>(0, MAX_VALUE, 12);
+		
+		btnProximo = new Button("Próximo");
+		btnProximo.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				alteraFormulario(gridFormularioRegras);
+			}
+		});
+		
+		btnVoltar = new Button("Voltar");
+		btnVoltar.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				alteraFormulario(gridFormularioValoresEmprestimo);
+			}
+		});
+	}
+	
+	private void alteraFormulario(GridPane showGrid) {
+		getChildren().clear();
+		getChildren().add(showGrid);
 	}
 
-	private void criaFormulario() {
-		addGrid("Valor do empréstimo", txtValorEmprestimo, 0);
-		adicionaFormRegras();
+	private void criaFormularios() {
+		addGrid(gridFormularioValoresEmprestimo, "Valor do empréstimo", txtValorEmprestimo, 0);
+		addGrid(gridFormularioValoresEmprestimo, "Valor da renda mensal", txtRenda, 1);
+		addGrid(gridFormularioValoresEmprestimo, "Quantidade de parcelas", spQtdParcelas, 2);
+		addGrid(gridFormularioValoresEmprestimo, "", btnProximo, 3);
+		
+		adicionaFormRegras(0);
 
-		getChildren().add(gridCampos);
+		getChildren().add(gridFormularioValoresEmprestimo);
 	}
 
-	private void adicionaFormRegras() {
-		adicionaCampoComprovacaoRenda(1);
-		adicionaCampoDependentes(2);
-		adicionaCampoEmprego(3);
-		adicionaCampoEstadoCivil(4);
-		adicionaCampoFuncionarioBanco(5);
-		adicionaCampoGrauEscolaridade(6);
-		adicionaCampoIdadeContaCorrente(7);
-		adicionaCampoMoradia(8);
-		adicionaCampoSPC(9);
+	private void adicionaFormRegras(int initialIndex) {
+		adicionaCampoComprovacaoRenda(++initialIndex);
+		adicionaCampoDependentes(++initialIndex);
+		adicionaCampoEmprego(++initialIndex);
+		adicionaCampoEstadoCivil(++initialIndex);
+		adicionaCampoFuncionarioBanco(++initialIndex);
+		adicionaCampoGrauEscolaridade(++initialIndex);
+		adicionaCampoIdadeContaCorrente(++initialIndex);
+		adicionaCampoMoradia(++initialIndex);
+		adicionaCampoSPC(++initialIndex);
+		addGrid(gridFormularioRegras, "", btnVoltar, ++initialIndex);
 	}
 
-	private void addGrid(String label, Node component, int ordem) {
-		gridCampos.add(toLabel(label), 0, ordem);
-		gridCampos.add(component, 1, ordem);
+	private void addGrid(GridPane grid, String label, Node component, int ordem) {
+		grid.add(toLabel(label), 0, ordem);
+		grid.add(component, 1, ordem);
 	}
 
 	private void adicionaCampoSPC(int ordem) {
 		cbSPC = new ComboBox<SPC>();
 		cbSPC.getItems().addAll(SPC.values());
 
-		addGrid("SPC", cbSPC, ordem);
+		addGrid(gridFormularioRegras, "SPC", cbSPC, ordem);
 	}
 
 	private void adicionaCampoMoradia(int ordem) {
 		cbMoradia = new ComboBox<Moradia>();
 		cbMoradia.getItems().addAll(Moradia.values());
 
-		addGrid("Moradia", cbMoradia, ordem);
+		addGrid(gridFormularioRegras, "Moradia", cbMoradia, ordem);
 	}
 
 	private void adicionaCampoIdadeContaCorrente(int ordem) {
 		cbIdadeContaCorrente = new ComboBox<IdadeContaCorrente>();
 		cbIdadeContaCorrente.getItems().addAll(IdadeContaCorrente.values());
 
-		addGrid("Idade da conta corrente", cbIdadeContaCorrente, ordem);
+		addGrid(gridFormularioRegras, "Idade da conta corrente", cbIdadeContaCorrente, ordem);
 	}
 
 	private void adicionaCampoGrauEscolaridade(int ordem) {
 		cbGrauEscolaridade = new ComboBox<GrauEscolaridade>();
 		cbGrauEscolaridade.getItems().addAll(GrauEscolaridade.values());
 
-		addGrid("Grau de escolaridade", cbGrauEscolaridade, ordem);
+		addGrid(gridFormularioRegras, "Grau de escolaridade", cbGrauEscolaridade, ordem);
 	}
 
 	private void adicionaCampoFuncionarioBanco(int ordem) {
 		cbFuncionarioBanco = new ComboBox<FuncionarioBanco>();
 		cbFuncionarioBanco.getItems().addAll(FuncionarioBanco.values());
 
-		addGrid("Estado civil", cbFuncionarioBanco, ordem);
+		addGrid(gridFormularioRegras, "Estado civil", cbFuncionarioBanco, ordem);
 	}
 
 	private void adicionaCampoEstadoCivil(int ordem) {
 		cbEstadoCivil = new ComboBox<EstadoCivil>();
 		cbEstadoCivil.getItems().addAll(EstadoCivil.values());
 
-		addGrid("Estado civil", cbEstadoCivil, ordem);
+		addGrid(gridFormularioRegras, "Estado civil", cbEstadoCivil, ordem);
 	}
 
 	private void adicionaCampoDependentes(int ordem) {
 		cbDependentes = new ComboBox<Dependentes>();
 		cbDependentes.getItems().addAll(Dependentes.values());
 
-		addGrid("Dependentes", cbDependentes, ordem);
+		addGrid(gridFormularioRegras, "Dependentes", cbDependentes, ordem);
 	}
 
 	private void adicionaCampoEmprego(int ordem) {
 		cbEmprego = new ComboBox<Emprego>();
 		cbEmprego.getItems().addAll(Emprego.values());
 
-		addGrid("Emprego", cbEmprego, ordem);
+		addGrid(gridFormularioRegras, "Emprego", cbEmprego, ordem);
 	}
 
 	private void adicionaCampoComprovacaoRenda(int ordem) {
 		cbComprovacaoRenda = new ComboBox<ComprovacaoDeRenda>();
 		cbComprovacaoRenda.getItems().addAll(ComprovacaoDeRenda.values());
 
-		addGrid("Comprovação de renda", cbComprovacaoRenda, ordem);
+		addGrid(gridFormularioRegras, "Comprovação de renda", cbComprovacaoRenda, ordem);
 	}
 
 	private Label toLabel(String text) {

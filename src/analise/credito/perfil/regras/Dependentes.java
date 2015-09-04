@@ -25,4 +25,9 @@ public enum Dependentes implements Regra {
 		return label;
 	}
 
+	@Override
+	public String getLabel() {
+		return "Dependentes";
+	}
+
 }

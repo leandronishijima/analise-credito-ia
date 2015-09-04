@@ -21,6 +21,11 @@ public enum SPC implements Regra {
 	@Override
 	public String toString() {
 		return label;
+	}
+
+	@Override
+	public String getLabel() {
+		return "SPC";
 	} 
 
 }

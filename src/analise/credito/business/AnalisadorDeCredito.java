@@ -35,7 +35,7 @@ public class AnalisadorDeCredito {
 	}
 
 	private void calculaPontosCampo(Regra regra) {
-		this.pontuacao += regra.getPontuacao();
+		pontuacao += regra.getPontuacao();
 	}
 	
 }

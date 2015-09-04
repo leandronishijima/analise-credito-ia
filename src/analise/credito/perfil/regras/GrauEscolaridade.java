@@ -26,5 +26,10 @@ public enum GrauEscolaridade implements Regra {
 	public String toString() {
 		return label;
 	}
+
+	@Override
+	public String getLabel() {
+		return "Grau de escolaridade";
+	}
 	
 }

@@ -20,5 +20,10 @@ public enum FuncionarioBanco implements Regra {
 	public String toString() {
 		return this.name();
 	}
+
+	@Override
+	public String getLabel() {
+		return "Funcionário do banco";
+	}
 	
 }

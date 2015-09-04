@@ -20,4 +20,9 @@ public enum ComprovacaoDeRenda implements Regra {
 		return this.name();
 	}
 
+	@Override
+	public String getLabel() {
+		return "Comprovação de renda";
+	}
+
 }

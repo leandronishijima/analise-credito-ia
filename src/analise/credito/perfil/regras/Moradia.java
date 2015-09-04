@@ -23,4 +23,9 @@ public enum Moradia implements Regra {
 		return label;
 	}
 
+	@Override
+	public String getLabel() {
+		return "Moradia";
+	}
+
 }
