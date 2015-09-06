@@ -2,7 +2,7 @@ package analise.credito.perfil.regras;
 
 public enum Moradia implements Regra {
 	
-	PROPRIA(30, "Própria"),
+	PROPRIA(10, "Própria"),
 	ALUGADA(0, "Alugada");
 	
 	private int pontuacao;

@@ -4,8 +4,8 @@ public enum EstadoCivil implements Regra {
 
 	SOLTEIRO(10, "Solteiro(a)"),
 	VIUVO(10, "Viuvo(a)"),
-	CASADO(0, "Casado(a)"),
-	DIVORCIADO(10, "Divorciado(a)");
+	CASADO(10, "Casado(a)"),
+	DIVORCIADO(0, "Divorciado(a)");
 	
 	private int pontuacao;
 	private String label;

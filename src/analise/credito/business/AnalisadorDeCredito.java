@@ -7,35 +7,31 @@ import analise.credito.perfil.Perfil;
 import analise.credito.perfil.regras.Regra;
 
 public class AnalisadorDeCredito {
-	
+
 	private Perfil perfil;
 	private int pontuacao;
-	
+
 	public AnalisadorDeCredito(Perfil perfil) {
 		this.perfil = perfil;
-		this.pontuacao = 0;
+		calculaPontuacao();
 	}
-	
-	public Integer calculaPontuacao() {
+
+	private Integer calculaPontuacao() {
 		List<? extends Object> atributos = Arrays.asList(
-				perfil.getComprovacaoDeRenda(),
-				perfil.getDependentes(),
-				perfil.getEmprego(),
-				perfil.getEstadoCivil(),
-				perfil.getFuncionarioBanco(),
-				perfil.getGrauEscolaridade(),
-				perfil.getIdadeContaCorrente(),
-				perfil.getMoradia(),
+				perfil.getComprovacaoDeRenda(), perfil.getDependentes(),
+				perfil.getEmprego(), perfil.getEstadoCivil(),
+				perfil.getFuncionarioBanco(), perfil.getGrauEscolaridade(),
+				perfil.getIdadeContaCorrente(), perfil.getMoradia(),
 				perfil.getSpc());
-		
-		for (Object regra : atributos)
-			calculaPontosCampo((Regra) regra);
-		
+
+		pontuacao = atributos.stream()
+				.mapToInt(r -> ((Regra) r).getPontuacao()).sum();
+
 		return pontuacao;
 	}
 
-	private void calculaPontosCampo(Regra regra) {
-		pontuacao += regra.getPontuacao();
+	public boolean isCreditoAceito() {
+		return pontuacao > 130;
 	}
-	
+
 }

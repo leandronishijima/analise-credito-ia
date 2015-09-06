@@ -2,17 +2,21 @@ package analise.credito.view;
 
 import static java.lang.Integer.MAX_VALUE;
 import static javafx.geometry.Pos.TOP_LEFT;
+import static javafx.scene.control.Alert.AlertType.INFORMATION;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import analise.credito.business.CalculadoraPrestacoes;
 import analise.credito.perfil.Perfil;
 import analise.credito.perfil.PerfilBuilder;
 import analise.credito.perfil.regras.ComprovacaoDeRenda;
@@ -24,15 +28,15 @@ import analise.credito.perfil.regras.GrauEscolaridade;
 import analise.credito.perfil.regras.IdadeContaCorrente;
 import analise.credito.perfil.regras.Moradia;
 import analise.credito.perfil.regras.SPC;
-import analise.credito.view.components.CurrencyTextField;
 
 public class FormularioView extends VBox {
 
 	private GridPane gridFormularioValoresEmprestimo;
-	private CurrencyTextField txtValorEmprestimo;
-	private CurrencyTextField txtRenda;
+	private TextField txtValorEmprestimo;
+	private TextField txtRenda;
 	private Spinner<Integer> spQtdParcelas;
-	
+	private Button btnParcelasView;
+
 	private Button btnProximo;
 
 	private ComboBox<ComprovacaoDeRenda> cbComprovacaoRenda;
@@ -44,10 +48,12 @@ public class FormularioView extends VBox {
 	private ComboBox<IdadeContaCorrente> cbIdadeContaCorrente;
 	private ComboBox<Moradia> cbMoradia;
 	private ComboBox<SPC> cbSPC;
-	
+
 	private Button btnVoltar;
+	private Button btnAnalisar;
 
 	private GridPane gridFormularioRegras;
+	private ResultadosView resultado;
 
 	public FormularioView() {
 		setSpacing(5);
@@ -60,7 +66,7 @@ public class FormularioView extends VBox {
 		gridFormularioValoresEmprestimo.setHgap(10);
 		gridFormularioValoresEmprestimo.setVgap(10);
 		gridFormularioValoresEmprestimo.setPadding(new Insets(25, 25, 25, 25));
-		
+
 		gridFormularioRegras = new GridPane();
 		gridFormularioRegras.setAlignment(Pos.CENTER);
 		gridFormularioRegras.setHgap(10);
@@ -79,44 +85,72 @@ public class FormularioView extends VBox {
 				.setFuncionarioBanco(cbFuncionarioBanco.getValue())
 				.setGrauEscolaridade(cbGrauEscolaridade.getValue())
 				.setIdadeContaCorrente(cbIdadeContaCorrente.getValue())
-				.setMoradia(cbMoradia.getValue())
-				.setSPC(cbSPC.getValue())
+				.setMoradia(cbMoradia.getValue()).setSPC(cbSPC.getValue())
 				.build();
 	}
 
 	private void configuraTextField() {
-		txtValorEmprestimo = new CurrencyTextField();
-		txtRenda = new CurrencyTextField();
+		txtValorEmprestimo = new TextField();
+		txtRenda = new TextField();
 		spQtdParcelas = new Spinner<Integer>(0, MAX_VALUE, 12);
-		
+
+		btnParcelasView = new Button("Visualizar prestações");
+		btnParcelasView.setOnAction(e -> {
+			Alert dialogParcelas = new Alert(INFORMATION);
+			dialogParcelas.setTitle("Parcelas");
+			dialogParcelas.setHeaderText("Parcelas calculadas");
+
+			String valorEmprestimo = FormularioView.this.txtValorEmprestimo.getText();
+			
+			CalculadoraPrestacoes calculadora = new CalculadoraPrestacoes(Double.parseDouble(valorEmprestimo), FormularioView.this.spQtdParcelas.getValue());
+			calculadora.calculaValorDeCadaPrestacao();
+			
+			dialogParcelas.setContentText(calculadora.getPrintPrestacoes());
+			dialogParcelas.showAndWait();
+		});
+
 		btnProximo = new Button("Próximo");
-		btnProximo.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				alteraFormulario(gridFormularioRegras);
-			}
+		btnProximo.setOnAction(e -> {
+			alteraFormulario(gridFormularioRegras);
+		});
+
+		btnVoltar = new Button("Voltar");
+		btnVoltar.setOnAction(e -> {
+			alteraFormulario(gridFormularioValoresEmprestimo);
 		});
 		
-		btnVoltar = new Button("Voltar");
-		btnVoltar.setOnAction(new EventHandler<ActionEvent>() {
+		btnAnalisar = new Button("Analisar Perfil");
+		btnAnalisar.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				alteraFormulario(gridFormularioValoresEmprestimo);
+				mostraResultado();
 			}
 		});
 	}
 	
+	private void mostraResultado() {
+		resultado = new ResultadosView(getPerfil());
+		getChildren().clear();
+		getChildren().add(resultado);
+	}
+
 	private void alteraFormulario(GridPane showGrid) {
 		getChildren().clear();
 		getChildren().add(showGrid);
 	}
 
 	private void criaFormularios() {
-		addGrid(gridFormularioValoresEmprestimo, "Valor do empréstimo", txtValorEmprestimo, 0);
-		addGrid(gridFormularioValoresEmprestimo, "Valor da renda mensal", txtRenda, 1);
-		addGrid(gridFormularioValoresEmprestimo, "Quantidade de parcelas", spQtdParcelas, 2);
-		addGrid(gridFormularioValoresEmprestimo, "", btnProximo, 3);
+		addGrid(gridFormularioValoresEmprestimo, "Valor do empréstimo",
+				txtValorEmprestimo, 0);
+		addGrid(gridFormularioValoresEmprestimo, "Valor da renda mensal",
+				txtRenda, 1);
+		addGrid(gridFormularioValoresEmprestimo, "Quantidade de parcelas",
+				spQtdParcelas, 2);
 		
+		gridFormularioValoresEmprestimo.add(btnParcelasView, 2, 2);
+		
+		addGrid(gridFormularioValoresEmprestimo, "", btnProximo, 3);
+
 		adicionaFormRegras(0);
 
 		getChildren().add(gridFormularioValoresEmprestimo);
@@ -132,7 +166,8 @@ public class FormularioView extends VBox {
 		adicionaCampoIdadeContaCorrente(++initialIndex);
 		adicionaCampoMoradia(++initialIndex);
 		adicionaCampoSPC(++initialIndex);
-		addGrid(gridFormularioRegras, "", btnVoltar, ++initialIndex);
+		gridFormularioRegras.add(btnVoltar, 0, ++initialIndex);
+		gridFormularioRegras.add(btnAnalisar, 1, initialIndex);
 	}
 
 	private void addGrid(GridPane grid, String label, Node component, int ordem) {
@@ -158,14 +193,16 @@ public class FormularioView extends VBox {
 		cbIdadeContaCorrente = new ComboBox<IdadeContaCorrente>();
 		cbIdadeContaCorrente.getItems().addAll(IdadeContaCorrente.values());
 
-		addGrid(gridFormularioRegras, "Idade da conta corrente", cbIdadeContaCorrente, ordem);
+		addGrid(gridFormularioRegras, "Idade da conta corrente",
+				cbIdadeContaCorrente, ordem);
 	}
 
 	private void adicionaCampoGrauEscolaridade(int ordem) {
 		cbGrauEscolaridade = new ComboBox<GrauEscolaridade>();
 		cbGrauEscolaridade.getItems().addAll(GrauEscolaridade.values());
 
-		addGrid(gridFormularioRegras, "Grau de escolaridade", cbGrauEscolaridade, ordem);
+		addGrid(gridFormularioRegras, "Grau de escolaridade",
+				cbGrauEscolaridade, ordem);
 	}
 
 	private void adicionaCampoFuncionarioBanco(int ordem) {
@@ -200,7 +237,8 @@ public class FormularioView extends VBox {
 		cbComprovacaoRenda = new ComboBox<ComprovacaoDeRenda>();
 		cbComprovacaoRenda.getItems().addAll(ComprovacaoDeRenda.values());
 
-		addGrid(gridFormularioRegras, "Comprovação de renda", cbComprovacaoRenda, ordem);
+		addGrid(gridFormularioRegras, "Comprovação de renda",
+				cbComprovacaoRenda, ordem);
 	}
 
 	private Label toLabel(String text) {

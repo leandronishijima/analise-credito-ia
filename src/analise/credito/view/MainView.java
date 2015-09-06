@@ -2,8 +2,6 @@ package analise.credito.view;
 
 import static javafx.geometry.Pos.TOP_LEFT;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -20,11 +18,10 @@ public class MainView extends Application {
 	private VBox vLayoutPrincipal;
 	private HBox hLayoutHeader;
 	private HBox hLayoutBody;
-	private HBox hLayoutFooter;
-	private Button btnAnalisar;
 	
+	private Button btnNovoPerfil;
+
 	private FormularioView formulario;
-	private ResultadosView resultado;
 	
 	private Label lblTitle;
 	
@@ -40,30 +37,26 @@ public class MainView extends Application {
 		configuraStage(stage);
 	}
 	
-	private void mostraResultado() {
-		resultado = new ResultadosView(formulario.getPerfil());
-		hLayoutBody.getChildren().clear();
-		hLayoutBody.getChildren().add(resultado);
-	}
-	
-
 	private void inicializaComponentes() {
 		lblTitle = new Label("Perfil");
 		formulario = new FormularioView();
-		btnAnalisar = new Button("Analisar Perfil");
-		btnAnalisar.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				mostraResultado();
-			}
+		
+		btnNovoPerfil = new Button("Novo perfil");
+		btnNovoPerfil.setOnAction(e -> {
+			resetFormulario();
 		});
 		
 		addHeader(lblTitle);
+		addBody(btnNovoPerfil);
 		addBody(formulario);
-		addFooter(btnAnalisar);
 		addLayoutPrincipal(hLayoutHeader);
 		addLayoutPrincipal(hLayoutBody);
-		addLayoutPrincipal(hLayoutFooter);
+	}
+
+	private void resetFormulario() {
+		hLayoutBody.getChildren().remove(formulario);
+		formulario = new FormularioView();
+		hLayoutBody.getChildren().add(formulario);
 	}
 
 	private void inicializaLayouts() {
@@ -78,10 +71,6 @@ public class MainView extends Application {
 		hLayoutBody = new HBox();
 		hLayoutBody.setSpacing(5);
 		hLayoutBody.setAlignment(TOP_LEFT);
-		
-		hLayoutFooter = new HBox();
-		hLayoutFooter.setSpacing(5);
-		hLayoutFooter.setAlignment(TOP_LEFT);
 	}
 	
 	private void addLayoutPrincipal(Node node) {
@@ -96,10 +85,6 @@ public class MainView extends Application {
 		hLayoutBody.getChildren().add(node);
 	}
 	
-	private void addFooter(Node node) {
-		hLayoutFooter.getChildren().add(node);
-	}
-
 	private void configuraStage(Stage stage) {
 		Scene scene = new Scene(pane);
 		stage.setScene(scene);

@@ -2,8 +2,8 @@ package analise.credito.perfil.regras;
 
 public enum Dependentes implements Regra {
 	
-	NENHUM(10, "Nenhum"),
-	UM(10, "1"),
+	NENHUM(30, "Nenhum"),
+	UM(20, "1"),
 	DOIS(10, "2"),
 	TRES_OU_MAIS(0, "3 ou mais");
 	

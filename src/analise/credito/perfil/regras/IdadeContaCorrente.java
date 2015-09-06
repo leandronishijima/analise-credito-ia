@@ -27,7 +27,7 @@ public enum IdadeContaCorrente implements Regra {
 
 	@Override
 	public String getLabel() {
-		return "Grau de escolaridade";
+		return "Idade conta corrente";
 	}
 
 }
