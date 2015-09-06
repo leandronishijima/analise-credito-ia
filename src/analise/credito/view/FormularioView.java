@@ -30,12 +30,13 @@ import analise.credito.perfil.regras.GrauEscolaridade;
 import analise.credito.perfil.regras.IdadeContaCorrente;
 import analise.credito.perfil.regras.Moradia;
 import analise.credito.perfil.regras.SPC;
+import analise.credito.view.components.CurrencyTextField;
 
 public class FormularioView extends VBox {
 
 	private GridPane gridFormularioValoresEmprestimo;
-	private TextField txtValorEmprestimo;
-	private TextField txtRenda;
+	private CurrencyTextField txtValorEmprestimo;
+	private CurrencyTextField txtRenda;
 	private Spinner<Integer> spQtdParcelas;
 	private Button btnParcelasView;
 
@@ -92,14 +93,14 @@ public class FormularioView extends VBox {
 	}
 
 	private void configuraTextField() {
-		txtValorEmprestimo = new TextField();
-		txtRenda = new TextField();
+		txtValorEmprestimo = new CurrencyTextField();
+		txtRenda = new CurrencyTextField();
 		spQtdParcelas = new Spinner<Integer>(0, MAX_VALUE, 12);
 
 		btnParcelasView = new Button("Visualizar prestações");
 		btnParcelasView.setOnAction(e -> {
-			String valorEmprestimo = FormularioView.this.txtValorEmprestimo.getText();
-			String renda = FormularioView.this.txtRenda.getText();
+			String valorEmprestimo = FormularioView.this.txtValorEmprestimo.getTexto();
+			String renda = FormularioView.this.txtRenda.getTexto();
 			CalculadoraPrestacoes calculadora = new CalculadoraPrestacoes(Double.parseDouble(valorEmprestimo), FormularioView.this.spQtdParcelas.getValue(), Double.parseDouble(renda));
 			
 			try {
@@ -112,9 +113,9 @@ public class FormularioView extends VBox {
 
 		btnProximo = new Button("Próximo");
 		btnProximo.setOnAction(e -> {
-			String valorEmprestimo = FormularioView.this.txtValorEmprestimo.getText();
+			String valorEmprestimo = FormularioView.this.txtValorEmprestimo.getTexto();
 			btnParcelasView = new Button("Visualizar prestações");
-			String renda = FormularioView.this.txtRenda.getText();
+			String renda = FormularioView.this.txtRenda.getTexto();
 			CalculadoraPrestacoes calculadora = new CalculadoraPrestacoes(Double.parseDouble(valorEmprestimo), FormularioView.this.spQtdParcelas.getValue(), Double.parseDouble(renda));
 			
 			try {

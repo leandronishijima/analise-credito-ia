@@ -13,6 +13,12 @@ public class CurrencyTextField extends TextField {
 		configureMask();
 	}
 
+	public String getTexto() {
+		String text = super.getText();
+		String replaceAll = text.replace("R$ ", "").replace(".", "");
+		return replaceAll.substring(0, replaceAll.length() - 2) + "." + replaceAll.substring(replaceAll.length() - 2);
+	}
+	
 	private void configureMask() {
 		lengthProperty().addListener(new ChangeListener<Number>() {
             @Override
