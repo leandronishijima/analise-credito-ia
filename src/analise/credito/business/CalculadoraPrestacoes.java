@@ -13,22 +13,34 @@ public class CalculadoraPrestacoes {
 	private Double valorTotal;
 	private int qtdPrestacoes;
 	private List<Double> prestacoes;
+	private double renda;
 	
-	public CalculadoraPrestacoes(Double valorTotal, int qtdPrestacoes) {
+	public CalculadoraPrestacoes(Double valorTotal, int qtdPrestacoes, double renda) {
 		this.valorTotal = valorTotal;
 		this.qtdPrestacoes = qtdPrestacoes;
+		this.renda = renda;
 		this.prestacoes = new ArrayList<Double>();
 	}
 	
 	public void calculaValorDeCadaPrestacao() {
-		Double prestacao = (valorTotal / qtdPrestacoes) + TAXA_SELIC;
+		Double prestacaoInicial = (valorTotal / qtdPrestacoes) + TAXA_SELIC;
 		
-		prestacoes.add(prestacao);
-
+		prestacoes.add(prestacaoInicial);
+		double totalSelic = TAXA_SELIC;
+		double valorPrestacaoInicial = prestacaoInicial - TAXA_SELIC;
+		
 		for (int i = 0; i < qtdPrestacoes - 1; i++) {
-			prestacao += + TAXA_SELIC;
-			prestacoes.add(prestacao);
+			prestacaoInicial += + TAXA_SELIC;
+			prestacoes.add(prestacaoInicial);
+			totalSelic += prestacaoInicial - valorPrestacaoInicial;
 		}
+		
+		Double prestacaoFinal = prestacoes.get(prestacoes.size() - 1);
+		if (prestacaoFinal > renda / 2)
+			throw new ParcelaInvalidaException(
+						String.format("Valor das parcelas ultrapassam a metade da renda do solicitante.\n\n" +
+						"Aumente a quantidade de parcelas ou a renda mensal.\n\n" + getPrintPrestacoes()));// sugerida: %d", (int)((valorTotal + totalSelic)/(renda/2))));
+		
 	}
 	
 	public List<Double> getPrestacoes() {

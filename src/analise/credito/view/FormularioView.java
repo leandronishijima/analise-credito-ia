@@ -9,6 +9,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -17,6 +18,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import analise.credito.business.CalculadoraPrestacoes;
+import analise.credito.business.ParcelaInvalidaException;
 import analise.credito.perfil.Perfil;
 import analise.credito.perfil.PerfilBuilder;
 import analise.credito.perfil.regras.ComprovacaoDeRenda;
@@ -96,22 +98,31 @@ public class FormularioView extends VBox {
 
 		btnParcelasView = new Button("Visualizar prestações");
 		btnParcelasView.setOnAction(e -> {
-			Alert dialogParcelas = new Alert(INFORMATION);
-			dialogParcelas.setTitle("Parcelas");
-			dialogParcelas.setHeaderText("Parcelas calculadas");
-
 			String valorEmprestimo = FormularioView.this.txtValorEmprestimo.getText();
+			String renda = FormularioView.this.txtRenda.getText();
+			CalculadoraPrestacoes calculadora = new CalculadoraPrestacoes(Double.parseDouble(valorEmprestimo), FormularioView.this.spQtdParcelas.getValue(), Double.parseDouble(renda));
 			
-			CalculadoraPrestacoes calculadora = new CalculadoraPrestacoes(Double.parseDouble(valorEmprestimo), FormularioView.this.spQtdParcelas.getValue());
-			calculadora.calculaValorDeCadaPrestacao();
-			
-			dialogParcelas.setContentText(calculadora.getPrintPrestacoes());
-			dialogParcelas.showAndWait();
+			try {
+				calculadora.calculaValorDeCadaPrestacao();
+				dialogParcelasValidas(calculadora);
+			} catch (ParcelaInvalidaException ex) {
+				msgParcelasInvalidas(ex.getMessage());
+			}
 		});
 
 		btnProximo = new Button("Próximo");
 		btnProximo.setOnAction(e -> {
-			alteraFormulario(gridFormularioRegras);
+			String valorEmprestimo = FormularioView.this.txtValorEmprestimo.getText();
+			btnParcelasView = new Button("Visualizar prestações");
+			String renda = FormularioView.this.txtRenda.getText();
+			CalculadoraPrestacoes calculadora = new CalculadoraPrestacoes(Double.parseDouble(valorEmprestimo), FormularioView.this.spQtdParcelas.getValue(), Double.parseDouble(renda));
+			
+			try {
+				calculadora.calculaValorDeCadaPrestacao();
+				alteraFormulario(gridFormularioRegras);
+			} catch (ParcelaInvalidaException ex) {
+				msgParcelasInvalidas(ex.getMessage());
+			}
 		});
 
 		btnVoltar = new Button("Voltar");
@@ -126,6 +137,22 @@ public class FormularioView extends VBox {
 				mostraResultado();
 			}
 		});
+	}
+
+	private void dialogParcelasValidas(CalculadoraPrestacoes calculadora) {
+		Alert dialogParcelas = new Alert(INFORMATION);
+		dialogParcelas.setTitle("Parcelas");
+		dialogParcelas.setHeaderText("Parcelas calculadas");
+		dialogParcelas.setContentText(calculadora.getPrintPrestacoes());
+		dialogParcelas.showAndWait();
+	}
+
+	private void msgParcelasInvalidas(String mensagem) {
+		Alert dialogParcelas = new Alert(AlertType.ERROR);
+		dialogParcelas.setTitle("Parcelas");
+		dialogParcelas.setHeaderText("Parcelas invalidas");
+		dialogParcelas.setContentText(mensagem);
+		dialogParcelas.showAndWait();
 	}
 	
 	private void mostraResultado() {
@@ -209,7 +236,7 @@ public class FormularioView extends VBox {
 		cbFuncionarioBanco = new ComboBox<FuncionarioBanco>();
 		cbFuncionarioBanco.getItems().addAll(FuncionarioBanco.values());
 
-		addGrid(gridFormularioRegras, "Estado civil", cbFuncionarioBanco, ordem);
+		addGrid(gridFormularioRegras, "Funcionário Banco", cbFuncionarioBanco, ordem);
 	}
 
 	private void adicionaCampoEstadoCivil(int ordem) {
