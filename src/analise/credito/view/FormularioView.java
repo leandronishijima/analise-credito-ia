@@ -1,12 +1,9 @@
 package analise.credito.view;
 
 import static java.lang.Integer.MAX_VALUE;
-import static javafx.geometry.Pos.TOP_LEFT;
+import static javafx.geometry.Pos.CENTER;
 import static javafx.scene.control.Alert.AlertType.INFORMATION;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -14,7 +11,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import analise.credito.business.CalculadoraPrestacoes;
@@ -60,18 +56,19 @@ public class FormularioView extends VBox {
 
 	public FormularioView() {
 		setSpacing(5);
-		setAlignment(TOP_LEFT);
+		setAlignment(CENTER);
+		setStyle("-fx-border-style: solid;");
 
 		configuraTextField();
 
 		gridFormularioValoresEmprestimo = new GridPane();
-		gridFormularioValoresEmprestimo.setAlignment(Pos.CENTER);
+		gridFormularioValoresEmprestimo.setAlignment(CENTER);
 		gridFormularioValoresEmprestimo.setHgap(10);
 		gridFormularioValoresEmprestimo.setVgap(10);
 		gridFormularioValoresEmprestimo.setPadding(new Insets(25, 25, 25, 25));
 
 		gridFormularioRegras = new GridPane();
-		gridFormularioRegras.setAlignment(Pos.CENTER);
+		gridFormularioRegras.setAlignment(CENTER);
 		gridFormularioRegras.setHgap(10);
 		gridFormularioRegras.setVgap(10);
 		gridFormularioRegras.setPadding(new Insets(25, 25, 25, 25));
@@ -99,31 +96,12 @@ public class FormularioView extends VBox {
 
 		btnParcelasView = new Button("Visualizar prestações");
 		btnParcelasView.setOnAction(e -> {
-			String valorEmprestimo = FormularioView.this.txtValorEmprestimo.getTexto();
-			String renda = FormularioView.this.txtRenda.getTexto();
-			CalculadoraPrestacoes calculadora = new CalculadoraPrestacoes(Double.parseDouble(valorEmprestimo), FormularioView.this.spQtdParcelas.getValue(), Double.parseDouble(renda));
-			
-			try {
-				calculadora.calculaValorDeCadaPrestacao();
-				dialogParcelasValidas(calculadora);
-			} catch (ParcelaInvalidaException ex) {
-				msgParcelasInvalidas(ex.getMessage());
-			}
+			showParcelasCalculadas();
 		});
 
 		btnProximo = new Button("Próximo");
 		btnProximo.setOnAction(e -> {
-			String valorEmprestimo = FormularioView.this.txtValorEmprestimo.getTexto();
-			btnParcelasView = new Button("Visualizar prestações");
-			String renda = FormularioView.this.txtRenda.getTexto();
-			CalculadoraPrestacoes calculadora = new CalculadoraPrestacoes(Double.parseDouble(valorEmprestimo), FormularioView.this.spQtdParcelas.getValue(), Double.parseDouble(renda));
-			
-			try {
-				calculadora.calculaValorDeCadaPrestacao();
-				alteraFormulario(gridFormularioRegras);
-			} catch (ParcelaInvalidaException ex) {
-				msgParcelasInvalidas(ex.getMessage());
-			}
+			showFormularioDeRegras();
 		});
 
 		btnVoltar = new Button("Voltar");
@@ -132,12 +110,35 @@ public class FormularioView extends VBox {
 		});
 		
 		btnAnalisar = new Button("Analisar Perfil");
-		btnAnalisar.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
+		btnAnalisar.setOnAction(e -> {
 				mostraResultado();
-			}
 		});
+	}
+
+	private void showFormularioDeRegras() {
+		String valorEmprestimo = FormularioView.this.txtValorEmprestimo.getTexto();
+		String renda = FormularioView.this.txtRenda.getTexto();
+		CalculadoraPrestacoes calculadora = new CalculadoraPrestacoes(Double.parseDouble(valorEmprestimo), FormularioView.this.spQtdParcelas.getValue(), Double.parseDouble(renda));
+		
+		try {
+			calculadora.calculaValorDeCadaPrestacao();
+			alteraFormulario(gridFormularioRegras);
+		} catch (ParcelaInvalidaException ex) {
+			msgParcelasInvalidas(ex.getMessage());
+		}
+	}
+
+	private void showParcelasCalculadas() {
+		String valorEmprestimo = FormularioView.this.txtValorEmprestimo.getTexto();
+		String renda = FormularioView.this.txtRenda.getTexto();
+		CalculadoraPrestacoes calculadora = new CalculadoraPrestacoes(Double.parseDouble(valorEmprestimo), FormularioView.this.spQtdParcelas.getValue(), Double.parseDouble(renda));
+		
+		try {
+			calculadora.calculaValorDeCadaPrestacao();
+			dialogParcelasValidas(calculadora);
+		} catch (ParcelaInvalidaException ex) {
+			msgParcelasInvalidas(ex.getMessage());
+		}
 	}
 
 	private void dialogParcelasValidas(CalculadoraPrestacoes calculadora) {

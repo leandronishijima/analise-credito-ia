@@ -2,18 +2,20 @@ package analise.credito.view;
 
 import static javafx.geometry.Pos.TOP_LEFT;
 import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class MainView extends Application {
 	
-	private AnchorPane pane;
+	private GridPane pane;
 	
 	private VBox vLayoutPrincipal;
 	private HBox hLayoutHeader;
@@ -40,14 +42,15 @@ public class MainView extends Application {
 	private void inicializaComponentes() {
 		lblTitle = new Label("Perfil");
 		formulario = new FormularioView();
+		formulario.setAlignment(Pos.CENTER_LEFT);
 		
 		btnNovoPerfil = new Button("Novo perfil");
 		btnNovoPerfil.setOnAction(e -> {
 			resetFormulario();
 		});
 		
-		addHeader(lblTitle);
-		addBody(btnNovoPerfil);
+		addLayoutPrincipal(lblTitle);
+		addHeader(btnNovoPerfil);
 		addBody(formulario);
 		addLayoutPrincipal(hLayoutHeader);
 		addLayoutPrincipal(hLayoutBody);
@@ -94,8 +97,12 @@ public class MainView extends Application {
 	}
 	
 	private void configuraPane() {
-		pane = new AnchorPane();
-		pane.setPrefSize(800, 620);
+		pane = new GridPane();
+		pane.setAlignment(Pos.CENTER);
+		pane.setHgap(10);
+		pane.setVgap(10);
+		pane.setPadding(new Insets(25, 25, 25, 25));
+		pane.setPrefSize(600, 520);
 		pane.getChildren().addAll(vLayoutPrincipal);
 	}
 	

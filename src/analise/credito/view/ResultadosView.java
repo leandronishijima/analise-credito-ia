@@ -1,7 +1,6 @@
 package analise.credito.view;
 
 import static javafx.geometry.Pos.CENTER;
-import static javafx.geometry.Pos.TOP_LEFT;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -48,7 +47,7 @@ public class ResultadosView extends VBox {
 
 	private void configuraLayouts() {
 		setSpacing(5);
-		setAlignment(TOP_LEFT);
+		setAlignment(CENTER);
 		
 		hLayoutResultado = new HBox();
 		hLayoutResultado.setAlignment(CENTER);
