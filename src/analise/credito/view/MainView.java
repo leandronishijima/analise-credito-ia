@@ -7,7 +7,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -25,8 +26,6 @@ public class MainView extends Application {
 
 	private FormularioView formulario;
 	
-	private Label lblTitle;
-	
 	public MainView() {
 	}
 
@@ -40,16 +39,15 @@ public class MainView extends Application {
 	}
 	
 	private void inicializaComponentes() {
-		lblTitle = new Label("Perfil");
 		formulario = new FormularioView();
 		formulario.setAlignment(Pos.CENTER_LEFT);
 		
 		btnNovoPerfil = new Button("Novo perfil");
+		btnNovoPerfil.setGraphic(new ImageView(new Image("file:resources/images/new.png")));
 		btnNovoPerfil.setOnAction(e -> {
 			resetFormulario();
 		});
 		
-		addLayoutPrincipal(lblTitle);
 		addHeader(btnNovoPerfil);
 		addBody(formulario);
 		addLayoutPrincipal(hLayoutHeader);
@@ -103,7 +101,7 @@ public class MainView extends Application {
 		pane.setVgap(10);
 		pane.setPadding(new Insets(25, 25, 25, 25));
 		pane.setPrefSize(600, 520);
-		pane.getChildren().addAll(vLayoutPrincipal);
+		pane.getChildren().add(vLayoutPrincipal);
 	}
 	
 	public void show(String[] args) {

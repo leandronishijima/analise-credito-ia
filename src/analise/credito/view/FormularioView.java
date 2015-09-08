@@ -2,7 +2,9 @@ package analise.credito.view;
 
 import static java.lang.Integer.MAX_VALUE;
 import static javafx.geometry.Pos.CENTER;
+import static javafx.geometry.Pos.CENTER_LEFT;
 import static javafx.geometry.Pos.CENTER_RIGHT;
+import static javafx.scene.control.Alert.AlertType.ERROR;
 import static javafx.scene.control.Alert.AlertType.INFORMATION;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -13,6 +15,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -60,7 +64,9 @@ public class FormularioView extends VBox {
 	public FormularioView() {
 		setSpacing(5);
 		setAlignment(CENTER);
-		setStyle("-fx-border-style: solid;");
+		setStyle("-fx-border-style: solid; "
+				+ "-fx-background-insets: 10; "
+				+ "-fx-background-radius: 10;");
 
 		configuraTextField();
 
@@ -97,23 +103,26 @@ public class FormularioView extends VBox {
 		txtRenda = new CurrencyTextField();
 		spQtdParcelas = new Spinner<Integer>(0, MAX_VALUE, 12);
 
-		btnParcelasView = new Button("Visualizar prestações");
+		btnParcelasView = new Button("Parcelas");
+		btnParcelasView.setGraphic(new ImageView(new Image("file:resources/images/lupa.gif")));
 		btnParcelasView.setOnAction(e -> {
 			showParcelasCalculadas();
 		});
 
 		btnProximo = new Button("Próximo");
+		btnProximo.setStyle("-fx-background-color: #6497b1; -fx-text-fill: #ffffff;");
 		btnProximo.setOnAction(e -> {
 			showFormularioDeRegras();
 		});
 
 		btnVoltar = new Button("Voltar");
+		btnVoltar.setStyle("-fx-background-color: #fe5757; -fx-text-fill: #ffffff;");
 		btnVoltar.setOnAction(e -> {
 			alteraFormulario(gridFormularioValoresEmprestimo);
 		});
 		
 		btnAnalisar = new Button("Analisar Perfil");
-		btnAnalisar.setStyle("-fx-background-color: #00aedb; -fx-text-fill: #ffffff;");
+		btnAnalisar.setStyle("-fx-background-color: #6497b1; -fx-text-fill: #ffffff;");
 		btnAnalisar.setOnAction(e -> {
 				mostraResultado();
 		});
@@ -146,25 +155,42 @@ public class FormularioView extends VBox {
 	}
 
 	private void dialogParcelasValidas(CalculadoraPrestacoes calculadora) {
-		Alert dialogParcelas = new Alert(INFORMATION);
-		dialogParcelas.setTitle("Parcelas");
-		dialogParcelas.setHeaderText("Parcelas calculadas");
-		dialogParcelas.setContentText(calculadora.getPrintPrestacoes());
-		dialogParcelas.showAndWait();
+		criaDialog(INFORMATION, "Parcelas", "Parcelas calculadas", calculadora.getPrintPrestacoes());
 	}
 
 	private void msgParcelasInvalidas(String mensagem) {
-		Alert dialogParcelas = new Alert(AlertType.ERROR);
-		dialogParcelas.setTitle("Parcelas");
-		dialogParcelas.setHeaderText("Parcelas invalidas");
-		dialogParcelas.setContentText(mensagem);
+		criaDialog(ERROR, "Parcelas", "Parcelas inválidas", mensagem);
+	}
+	
+	private void criaDialog(AlertType type, String title, String header, String content) {
+		Alert dialogParcelas = new Alert(type);
+		dialogParcelas.setTitle(title);
+		dialogParcelas.setHeaderText(header);
+		dialogParcelas.setContentText(content);
 		dialogParcelas.showAndWait();
 	}
 	
 	private void mostraResultado() {
+		if(validaCampos()) {
+			criaDialog(ERROR, "Atenção", "Verifique os campos do formulário", "Todos os campos são obrigatórios!");
+			return;
+		}
+		
 		resultado = new ResultadosView(getPerfil());
 		getChildren().clear();
 		getChildren().add(resultado);
+	}
+
+	private boolean validaCampos() {
+		return cbComprovacaoRenda.getValue() == null
+				|| cbDependentes.getValue() == null
+				|| cbEmprego.getValue() == null
+				|| cbEstadoCivil.getValue() == null
+				|| cbFuncionarioBanco.getValue() == null
+				|| cbGrauEscolaridade.getValue() == null
+				|| cbIdadeContaCorrente.getValue() == null
+				|| cbMoradia.getValue() == null 
+				|| cbSPC.getValue() == null;
 	}
 
 	private void alteraFormulario(GridPane showGrid) {
@@ -178,10 +204,14 @@ public class FormularioView extends VBox {
 		addGrid(gridFormularioValoresEmprestimo, "Valor da renda mensal",
 				txtRenda, 1);
 		
-		addGrid(gridFormularioValoresEmprestimo, "Quantidade de parcelas",
-				spQtdParcelas, 2);
+		HBox layoutViewParcelas = new HBox();
+		layoutViewParcelas.setAlignment(CENTER_LEFT);
+		layoutViewParcelas.setSpacing(5);
+		layoutViewParcelas.getChildren().add(spQtdParcelas);
+		layoutViewParcelas.getChildren().add(btnParcelasView);
 		
-		gridFormularioValoresEmprestimo.add(btnParcelasView, 2, 2);
+		addGrid(gridFormularioValoresEmprestimo, "Quantidade de parcelas",
+				layoutViewParcelas, 2);
 		
 		HBox layoutProximo = new HBox();
 		layoutProximo.setAlignment(CENTER_RIGHT);
